@@ -5,16 +5,26 @@ import connectDB from './config/mongodb.js'
 import userRouter from './routes/userRoutes.js'
 import imageRouter from './routes/imageRoutes.js'
 
+const PORT = process.env.PORT || 4000
+const app = express()
 
-const PORT =process.env.PORT || 4000
-const app=express()
+// ✅ CORS config
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://imagify-exe9.onrender.com'
+]
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}))
 
 app.use(express.json())
-app.use(cors())
 await connectDB()
 
-app.use('/api/user',userRouter)
-app.use('/api/image',imageRouter)
-app.get('/',(req,res)=>res.send("API Working"))
+app.use('/api/user', userRouter)
+app.use('/api/image', imageRouter)
 
-app.listen(PORT,()=> console.log('Server running on port:'+PORT));
+app.get('/', (req, res) => res.send("API Working"))
+
+app.listen(PORT, () => console.log('Server running on port: ' + PORT))
